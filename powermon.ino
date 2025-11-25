@@ -1,12 +1,4 @@
 
-
-/***************************************************************************
-* Example sketch for the ADS1115_WE library
-* https://github.com/wollewald/ADS1115_WE
-* https://wolles-elektronikkiste.de/ads1115 (German)
-* https://wolles-elektronikkiste.de/en/ads1115-a-d-converter-with-amplifier (English)
-***************************************************************************/
-
 #include<ADS1115_WE.h> 
 #include<Wire.h>
 #define I2C_ADDRESS 0x48
@@ -56,6 +48,7 @@ AsyncWebServer server(80);
 bool reboot=false;
 
 void setup() {
+  wifi_watchdog_timer_setup(60);
   Serial.begin(115200);
   // Inizializza WiFiManager
   WiFiManager wifiManager;
@@ -102,6 +95,7 @@ void loop() {
 
   if ((millis()/1000) > last_second+9){
     last_second=millis()/1000;
+    wifi_watchdog_timer_run(1000);
     for (int i=0;i<4;i++){
       if (in_calibration[i]){
         float p=get_live_data("Pgrid");
